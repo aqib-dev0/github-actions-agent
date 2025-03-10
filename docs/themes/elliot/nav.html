@@ -1,0 +1,22 @@
+{% if nav_item.children %}
+    <div class="nav-section">
+        {% for nav_child in nav_item.children %}
+            {% if nav_child.is_page %}
+                <a href="{{ nav_child.url|url }}" class="nav-link {% if nav_child.active %}active{% endif %}">
+                    {{ nav_child.title }}
+                </a>
+            {% else %}
+                <div class="nav-header">{{ nav_child.title }}</div>
+                {% for nav_grandchild in nav_child.children %}
+                    <a href="{{ nav_grandchild.url|url }}" class="nav-link {% if nav_grandchild.active %}active{% endif %}">
+                        {{ nav_grandchild.title }}
+                    </a>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <a href="{{ nav_item.url|url }}" class="nav-link {% if nav_item.active %}active{% endif %}">
+        {{ nav_item.title }}
+    </a>
+{% endif %}

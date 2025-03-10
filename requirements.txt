@@ -1,0 +1,10 @@
+slack_bolt
+langchain_anthropic
+crewai
+crewai-tools
+requests>=2.31.0
+opentelemetry-sdk
+opentelemetry-api
+python-dotenv
+prometheus_client
+mkdocs

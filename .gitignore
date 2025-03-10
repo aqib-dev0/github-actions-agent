@@ -1,0 +1,9 @@
+venv/
+.venv/
+repos_token.txt
+.DS_Store
+__pycache__/
+.env
+.vscode/
+venv311/
+*.log

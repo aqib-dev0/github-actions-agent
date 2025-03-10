@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ config.site_name }}</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --link-color: #1abc9c;
+            --accent-color: #e74c3c;
+            --code-bg: #1a1a1a;
+            --border-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+
+        .container > * {
+            margin-bottom: 2rem;
+        }
+
+        .container > *:last-child {
+            margin-bottom: 0;
+        }
+
+        .content-container { 
+            margin-left: 2rem;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-color);
+        }
+
+        code {
+            background-color: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0;
+            color: var(--text-color);
+            border-bottom: 1px solid transparent;
+            margin: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            border-bottom: 1px solid var(--accent-color);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo img {
+            max-width: 100px;
+            border-radius: 50%;
+        }
+
+        /* Terminal icon */
+        .terminal-icon {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            background-color: var(--code-bg);
+            padding: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            z-index: 1001;
+        }
+
+        .terminal-icon:hover {
+            background-color: var(--border-color);
+        }
+
+        /* Terminal-like effects */
+        .content::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15) 0px,
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Glitch effect for headings */
+        h1:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
+        /* Make all images in content more compact */
+        .content img {
+            max-width: 100%;
+            height: auto;
+            max-height: 400px;
+            margin: 1.5rem 0;
+        }
+
+        /* Terminal styles */
+        #terminal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 1rem;
+            z-index: 1000;
+            font-family: 'Courier New', monospace;
+            color: var(--text-color);
+            overflow-y: auto;
+        }
+
+        #terminal-output {
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+        }
+
+        #terminal-input {
+            display: flex;
+            align-items: center;
+        }
+
+        #terminal-prompt {
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+        }
+
+        #command-input {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Courier New', monospace;
+            flex-grow: 1;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-icon" onclick="toggleTerminal()">
+        >_
+    </div>
+
+    <div class="sidebar">
+        <div class="logo">
+            <img src="{{ 'assets/images/logo.png'|url }}" alt="{{ config.site_name }}">
+        </div>
+        <nav>
+            {% for nav_item in nav %}
+                {% include "nav.html" %}
+            {% endfor %}
+        </nav>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="content-container">
+                {% block content %}
+                    {{ page.content }}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div id="terminal">
+        <div id="terminal-output"></div>
+        <div id="terminal-input">
+            <span id="terminal-prompt">devops@agent:~$</span>
+            <input type="text" id="command-input" autofocus>
+        </div>
+    </div>
+
+    <script>
+        // Add terminal-like typing effect to headings
+        document.querySelectorAll('h1, h2, h3').forEach(heading => {
+            const text = heading.textContent;
+            heading.textContent = '';
+            let i = 0;
+            const type = () => {
+                if (i < text.length) {
+                    heading.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, 50);
+                }
+            };
+            type();
+        });
+
+        // Terminal functionality
+        const terminal = document.getElementById('terminal');
+        const output = document.getElementById('terminal-output');
+        const input = document.getElementById('command-input');
+
+        function toggleTerminal() {
+            terminal.style.display = terminal.style.display === 'none' ? 'block' : 'none';
+            if (terminal.style.display === 'block') {
+                input.focus();
+            }
+        }
+
+        // Press Ctrl + ` to toggle terminal
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === '`') {
+                toggleTerminal();
+            }
+        });
+
+        const commands = {
+            help: () => `Available commands:
+- help: Show this help message
+- ls: List available sections
+- cat <section>: Show content of a section
+- github: Open GitHub repository
+- features: List Developer Operation Agent features
+- clear: Clear terminal
+- exit: Close terminal`,
+            
+            ls: () => `docs/
+├── index.md
+└── metrics/
+    └── index.md`,
+
+            cat: (args) => {
+                if (args === 'features') {
+                    return `Current Capabilities:
+- Automated Coverage Reports
+- CI/CD Failure Analysis
+- Slack Integration
+- AI-Powered Insights
+- Robust Monitoring
+- Extensible Framework`;
+                }
+                return `Error: File not found. Try 'help' for available commands.`;
+            },
+
+            github: () => {
+                window.open('https://github.com/regentmarkets/developer-operation-agent', '_blank');
+                return 'Opening GitHub repository...';
+            },
+
+            features: () => commands.cat('features'),
+
+            clear: () => {
+                output.innerHTML = '';
+                return '';
+            },
+
+            exit: () => {
+                terminal.style.display = 'none';
+                return '';
+            }
+        };
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value.trim().toLowerCase();
+                const [command, ...args] = cmd.split(' ');
+                
+                output.innerHTML += `\n${document.getElementById('terminal-prompt').textContent} ${cmd}\n`;
+                
+                if (commands[command]) {
+                    output.innerHTML += commands[command](args.join(' ')) + '\n';
+                } else if (cmd !== '') {
+                    output.innerHTML += `Command not found: ${command}. Try 'help' for available commands.\n`;
+                }
+
+                input.value = '';
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install necessary system dependencies including curl and jq
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl=8.14.1-2 \
+    jq=1.7.1-6+deb13u1 && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy only requirements first to leverage Docker cache
+COPY requirements.txt .
+RUN pip install --no-cache-dir setuptools==70.0.0 && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application code after installing dependencies
+COPY . .
+RUN rm -rf docs/
+
+# Create a new non-root user with a home directory
+RUN useradd -m -d /home/appuser -s /bin/bash appuser && \
+    chown -R appuser:appuser /app
+
+# Switch to non-root user for security
+USER appuser
+
+# Set home directory
+ENV HOME=/home/appuser
