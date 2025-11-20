@@ -4,7 +4,7 @@
 
 # Welcome to Developer Operation Agent
 
-Developer Operation Agent, is an intelligent operational agent designed to automate repetitive tasks and streamline development workflows directly within Slack. Built on advanced AI technologies, it helps engineering teams work more efficiently.
+Developer Operation Agent is an intelligent operational agent designed to automate repetitive tasks and streamline development workflows directly within Slack. Built on advanced AI technologies, it helps engineering teams work more efficiently.
 
 ## Current Capabilities
 

@@ -75,7 +75,7 @@ class SupabaseLogger:
             "type": "Generative AI",
             "title": "DevOps Agent. Your AI assistant for developer operations.",
             "reporting_manager": "your_manager@example.com",  # Update with actual manager
-            "expertise": "Answering questions using automating developer operations workflows.",
+            "expertise": "Answering questions and automating developer operations workflows.",
             "responsibilities": "Process user queries and provide answers using RAG",
             "channel": "#devops_agent",  # Update with actual channel
             "team_department": "Developer Operations",

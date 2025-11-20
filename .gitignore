@@ -1,9 +1,64 @@
-venv/
-.venv/
-repos_token.txt
-.DS_Store
-__pycache__/
+# Environment variables - NEVER commit real credentials
 .env
-.vscode/
+.env.local
+.env.*.local
+!.env.example
+
+# Secrets / tokens
+repos_token.txt
+*.pem
+*.key
+*_rsa
+*_dsa
+secrets.json
+credentials.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.so
+.venv/
+venv/
 venv311/
+env/
+ENV/
+.python-version
+
+# Testing
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+coverage.xml
+coverage.json
+
+# Logs
 *.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
